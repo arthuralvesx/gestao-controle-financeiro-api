@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.dto.UsuarioRequestDto;
+import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.dto.AuthResponseDto;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.model.Usuario;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.service.UsuarioService;
 
@@ -35,8 +36,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody UsuarioRequestDto dto) {
-        boolean existe = service.validarUsuario(dto.email(), dto.senha());
-        return ResponseEntity.ok(existe);
+    public ResponseEntity<AuthResponseDto> login(@RequestBody UsuarioRequestDto dto) {
+        return ResponseEntity.ok(service.validarUsuario(dto.email(), dto.senha()));
     }
 }

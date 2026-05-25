@@ -27,7 +27,7 @@ public class UsuarioService {
         validarDados(dto);
         var email = dto.email().trim().toLowerCase();
         if (repository.existsByEmail(email)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email ja cadastrado.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado.");
         }
 
         var usuario = new Usuario(
@@ -39,17 +39,17 @@ public class UsuarioService {
 
     public AuthResponseDto validarUsuario(String email, String senha) {
         if (email == null || senha == null) {
-            return new AuthResponseDto(false, null, null, "Informe email e senha.");
+            return new AuthResponseDto(false, null, null, "Informe e-mail e senha.");
         }
 
         return repository.findByEmailAndSenha(email.trim().toLowerCase(), senha)
             .map(usuario -> new AuthResponseDto(true, usuario.getId(), usuario.getEmail(), "Login realizado com sucesso."))
-            .orElseGet(() -> new AuthResponseDto(false, null, null, "Email ou senha invalidos."));
+            .orElseGet(() -> new AuthResponseDto(false, null, null, "E-mail ou senha inválidos."));
     }
 
     private void validarDados(UsuarioRequestDto dto) {
         if (dto.email() == null || dto.email().isBlank() || dto.senha() == null || dto.senha().length() < 6) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe um email valido e uma senha com pelo menos 6 caracteres.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe um e-mail válido e uma senha com pelo menos 6 caracteres.");
         }
     }
 

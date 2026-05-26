@@ -1,7 +1,9 @@
 package com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.service;
 
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.dto.ReceitaRequestDto;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.exception.DespesaNotFoundException;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.model.Receita;
@@ -21,6 +23,7 @@ public class ReceitaService {
     }
 
     public Receita incluir(ReceitaRequestDto dto) {
+        validate(dto);
         var receita = new Receita (
             dto.data(),
             dto.valor()
@@ -35,6 +38,7 @@ public class ReceitaService {
 
     public Receita atualizar(Long id, ReceitaRequestDto dto) {
         var receita = BuscarPorId(id);
+        validate(dto);
 
         receita.setData(dto.data());
         receita.setValor(dto.valor());
@@ -45,5 +49,14 @@ public class ReceitaService {
     public void excluir(Long id) {
         var receita = BuscarPorId(id);
         repository.delete(receita);
+    }
+
+    private void validate(ReceitaRequestDto dto) {
+        if (dto.data() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe a data da receita.");
+        }
+        if (dto.valor() == null || dto.valor() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe uma receita maior que zero.");
+        }
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.dto.MetasRequestDto;
+import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.dto.MovimentacaoMetaRequestDto;
+import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.dto.MovimentacaoMetaResponseDto;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.model.Metas;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.service.MetasService;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +46,21 @@ public class MetasController {
     @PutMapping("/{id}")
     public ResponseEntity<Metas> atualizar(@PathVariable Long id, @RequestBody MetasRequestDto dto ) {     
         return ResponseEntity.ok(service.atualizar(id, dto));
+    }
+
+    @PostMapping("/{id}/entradas")
+    public ResponseEntity<Metas> guardar(@PathVariable Long id, @RequestBody MovimentacaoMetaRequestDto dto) {
+        return ResponseEntity.ok(service.registrarEntrada(id, dto));
+    }
+
+    @PostMapping("/{id}/saidas")
+    public ResponseEntity<Metas> retirar(@PathVariable Long id, @RequestBody MovimentacaoMetaRequestDto dto) {
+        return ResponseEntity.ok(service.registrarSaida(id, dto));
+    }
+
+    @GetMapping("/{id}/movimentacoes")
+    public ResponseEntity<List<MovimentacaoMetaResponseDto>> movimentacoes(@PathVariable Long id) {
+        return ResponseEntity.ok(service.movimentacoes(id));
     }
 
     @DeleteMapping("/{id}")

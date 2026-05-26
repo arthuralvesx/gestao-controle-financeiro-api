@@ -23,10 +23,16 @@ import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.repository.Re
 public class DashboardService {
     private final DespesaRepository despesaRepository;
     private final ReceitaRepository receitaRepository;
+    private final SaldoService saldoService;
 
-    public DashboardService(DespesaRepository despesaRepository, ReceitaRepository receitaRepository) {
+    public DashboardService(
+        DespesaRepository despesaRepository,
+        ReceitaRepository receitaRepository,
+        SaldoService saldoService
+    ) {
         this.despesaRepository = despesaRepository;
         this.receitaRepository = receitaRepository;
+        this.saldoService = saldoService;
     }
 
     public DashboardResumoDto resumo() {
@@ -58,14 +64,25 @@ public class DashboardService {
         }
         resumos.sort(Comparator.comparing(MesResumoDto::mes).reversed());
 
+        double totalReceitas = saldoService.totalReceitas();
+        double totalDespesas = saldoService.totalDespesas();
+        double totalGuardadoMetas = saldoService.totalGuardadoMetas();
+        double saldoTotal = saldoService.saldoDisponivel();
+
+        resumos.replaceAll(mes -> new MesResumoDto(
+            mes.mes(),
+            mes.receitas(),
+            mes.despesas(),
+            saldoService.totalGuardadoMetasAte(YearMonth.parse(mes.mes()).atEndOfMonth()),
+            mes.receitas() - mes.despesas() - saldoService.totalGuardadoMetasAte(YearMonth.parse(mes.mes()).atEndOfMonth()),
+            mes.categorias()
+        ));
+
         var mesMaisGasto = resumos.stream()
             .max(Comparator.comparing(MesResumoDto::despesas))
             .orElse(null);
 
-        double totalReceitas = receitas.stream().mapToDouble(r -> safe(r.getValor())).sum();
-        double totalDespesas = despesas.stream().mapToDouble(d -> safe(d.getValor())).sum();
-
-        return new DashboardResumoDto(totalReceitas, totalDespesas, totalReceitas - totalDespesas, mesMaisGasto, resumos);
+        return new DashboardResumoDto(totalReceitas, totalDespesas, totalGuardadoMetas, saldoTotal, mesMaisGasto, resumos);
     }
 
     private MesResumoDto toResumo(YearMonth mes, MesData data) {
@@ -78,7 +95,7 @@ public class DashboardService {
             ))
             .collect(Collectors.toList());
 
-        return new MesResumoDto(mes.toString(), data.receitas, data.despesas, data.receitas - data.despesas, categorias);
+        return new MesResumoDto(mes.toString(), data.receitas, data.despesas, 0.0, data.receitas - data.despesas, categorias);
     }
 
     private double safe(Double value) {

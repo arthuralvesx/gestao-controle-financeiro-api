@@ -13,8 +13,6 @@ public class Receita {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    //fazer validacao
     private LocalDate data;
     private Double valor;
     

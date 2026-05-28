@@ -12,11 +12,9 @@ public class Metas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-        
-    //fazer validacao
     private Double valorMeta;
     private Double valor;
-    private String metaCategoria; //virar enum
+    private String metaCategoria;
 
     public Metas(){}
     

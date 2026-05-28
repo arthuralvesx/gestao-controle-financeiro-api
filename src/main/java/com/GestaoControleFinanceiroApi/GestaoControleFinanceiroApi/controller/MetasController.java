@@ -26,7 +26,6 @@ public class MetasController {
         this.service = service;
     }
 
-    //testar endpoint
     @GetMapping
     public ResponseEntity<List<Metas>> listAll(){
         return ResponseEntity.ok(service.findAll());

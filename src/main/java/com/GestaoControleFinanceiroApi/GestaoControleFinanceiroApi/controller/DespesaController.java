@@ -26,7 +26,6 @@ public class DespesaController {
         this.service = service;
     }
 
-    //testar endpoint
     @GetMapping
     public ResponseEntity<List<Despesa>> listAll(){
         return ResponseEntity.ok(service.findAll());

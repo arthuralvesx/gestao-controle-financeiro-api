@@ -20,7 +20,6 @@ public class ReceitaService {
         return repository.findAll();
     }
 
-    //testar endpoint
     public Receita incluir(ReceitaRequestDto dto) {
         var receita = new Receita (
             dto.data(),

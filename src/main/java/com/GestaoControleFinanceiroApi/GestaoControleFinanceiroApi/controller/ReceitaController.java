@@ -27,7 +27,6 @@ public class ReceitaController {
         this.service = service;
     }
 
-    //testar endpoint
     @GetMapping
     public ResponseEntity<List<Receita>> listAll(){
         return ResponseEntity.ok(service.findAll());

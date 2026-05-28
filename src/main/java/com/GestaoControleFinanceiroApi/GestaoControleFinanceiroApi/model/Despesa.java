@@ -13,12 +13,10 @@ public class Despesa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    //fazer validacao
     private String nome;
     private Double valor;
     private LocalDate data;
-    private String categoria; //virar enum
+    private String categoria;
 
     public Despesa(){}
 

@@ -20,7 +20,6 @@ public class MetasService {
         return repository.findAll();
     }
 
-    //testar endpoint
     public Metas incluir(MetasRequestDto dto) {
         var metas = new Metas (
             dto.valorMeta(),

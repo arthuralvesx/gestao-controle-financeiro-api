@@ -20,7 +20,6 @@ public class DespesaService {
         return repository.findAll();
     }
 
-    //testar endpoint
     public Despesa incluir(DespesaRequestDto dto) {
         var despesa = new Despesa(
             dto.nome(),

@@ -14,7 +14,6 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //fazer validacao
     @Column(nullable = false, unique = true)
     private String email;
 

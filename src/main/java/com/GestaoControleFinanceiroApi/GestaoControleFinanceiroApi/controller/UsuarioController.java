@@ -30,7 +30,6 @@ public class UsuarioController {
     }
 
     @PostMapping
-    //fazer validacao de dado
     public ResponseEntity<Usuario> create(@RequestBody UsuarioRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criar(dto));
     }

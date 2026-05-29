@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.dto.MovimentacaoMetaRequestDto;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.dto.MovimentacaoMetaResponseDto;
@@ -125,8 +126,10 @@ public class MetasService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public void excluir(Long id) {
         var metas = BuscarPorId(id);
+        movimentacaoRepository.deleteByMetaId(id);
         repository.delete(metas);
     }
 

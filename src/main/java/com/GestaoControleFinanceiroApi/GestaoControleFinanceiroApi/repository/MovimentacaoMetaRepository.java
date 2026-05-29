@@ -10,4 +10,5 @@ import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.model.Movimen
 public interface MovimentacaoMetaRepository extends JpaRepository<MovimentacaoMeta, Long> {
     List<MovimentacaoMeta> findByMetaIdOrderByDataDescIdDesc(Long metaId);
     List<MovimentacaoMeta> findByDataLessThanEqual(LocalDate data);
+    void deleteByMetaId(Long metaId);
 }

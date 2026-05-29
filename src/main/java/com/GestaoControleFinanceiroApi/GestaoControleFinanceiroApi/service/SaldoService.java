@@ -1,6 +1,7 @@
 package com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,15 @@ public class SaldoService {
 
         return movimentacaoMetaRepository.findByDataLessThanEqual(data).stream()
             .mapToDouble(m -> m.getTipo() == TipoMovimentacaoMeta.ENTRADA ? safe(m.getValor()) : -safe(m.getValor()))
+            .sum();
+    }
+
+    public double totalGuardadoMetasNoMes(YearMonth mes) {
+        return movimentacaoMetaRepository.findAll().stream()
+            .filter(movimentacao -> movimentacao.getData() != null && YearMonth.from(movimentacao.getData()).equals(mes))
+            .mapToDouble(movimentacao -> movimentacao.getTipo() == TipoMovimentacaoMeta.ENTRADA
+                ? safe(movimentacao.getValor())
+                : -safe(movimentacao.getValor()))
             .sum();
     }
 

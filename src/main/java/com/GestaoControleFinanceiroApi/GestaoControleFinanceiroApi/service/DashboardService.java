@@ -64,10 +64,12 @@ public class DashboardService {
         }
         resumos.sort(Comparator.comparing(MesResumoDto::mes).reversed());
 
-        double totalReceitas = saldoService.totalReceitas();
-        double totalDespesas = saldoService.totalDespesas();
-        double totalGuardadoMetas = saldoService.totalGuardadoMetas();
-        double saldoTotal = saldoService.saldoDisponivel();
+        var mesAtual = YearMonth.now();
+        var dadosMesAtual = meses.getOrDefault(mesAtual, new MesData());
+        double totalReceitas = dadosMesAtual.receitas;
+        double totalDespesas = dadosMesAtual.despesas;
+        double totalGuardadoMetas = saldoService.totalGuardadoMetasNoMes(mesAtual);
+        double saldoTotal = totalReceitas - totalDespesas - totalGuardadoMetas;
 
         resumos.replaceAll(mes -> new MesResumoDto(
             mes.mes(),

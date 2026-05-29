@@ -129,7 +129,7 @@ public class MetasService {
     @Transactional
     public void excluir(Long id) {
         var metas = BuscarPorId(id);
-        movimentacaoRepository.deleteByMetaId(id);
+        movimentacaoRepository.deleteAllByMetaId(id);
         repository.delete(metas);
     }
 

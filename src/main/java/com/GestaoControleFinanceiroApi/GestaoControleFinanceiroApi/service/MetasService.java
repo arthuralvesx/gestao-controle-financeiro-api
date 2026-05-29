@@ -17,21 +17,26 @@ import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.model.TipoMov
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.repository.MetasRepository;
 import com.GestaoControleFinanceiroApi.GestaoControleFinanceiroApi.repository.MovimentacaoMetaRepository;
 
+import jakarta.persistence.EntityManager;
+
 @Service
 public class MetasService {
 
     private final MetasRepository repository;
     private final SaldoService saldoService;
     private final MovimentacaoMetaRepository movimentacaoRepository;
+    private final EntityManager entityManager;
 
     public MetasService(
         MetasRepository repository,
         SaldoService saldoService,
-        MovimentacaoMetaRepository movimentacaoRepository
+        MovimentacaoMetaRepository movimentacaoRepository,
+        EntityManager entityManager
     ) {
         this.repository = repository;
         this.saldoService = saldoService;
         this.movimentacaoRepository = movimentacaoRepository;
+        this.entityManager = entityManager;
     }
     
         public List<Metas> findAll() {
@@ -128,9 +133,15 @@ public class MetasService {
 
     @Transactional
     public void excluir(Long id) {
-        var metas = BuscarPorId(id);
-        movimentacaoRepository.deleteAllByMetaId(id);
-        repository.delete(metas);
+        BuscarPorId(id);
+        entityManager
+            .createNativeQuery("delete from movimentacoes_meta where meta_id = :metaId")
+            .setParameter("metaId", id)
+            .executeUpdate();
+        entityManager
+            .createNativeQuery("delete from metas where id = :metaId")
+            .setParameter("metaId", id)
+            .executeUpdate();
     }
 
     private double positive(Double value, String message) {
